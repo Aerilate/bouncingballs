@@ -1,4 +1,4 @@
-# Bouncing Balls
+# :basketball: Bouncing Balls :basketball:
 Bouncing Balls is a Java program aimed to optimize the collision of balls using a region quadtree algorithm. The simulation can handle over 20,000 bouncing balls.
 Here is what the simulation looks like with 1000 bouncing balls:
 
