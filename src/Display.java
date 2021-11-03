@@ -1,47 +1,22 @@
-/* Display.java
- * Displays the simulation
- * October 30, 2018
- * Raymond Wang
- */
-
-//Imports
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
-
 import java.util.ArrayList;
 
-/**
- * Display
- * Displays the window
- *
- * @param nothing
- * @return nothing
- */
 public class Display {
+    private final int STARTING_BALLS = 2500;
     private JFrame window;
     private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
     private JPanel drawnPanel;
-    private ArrayList<BouncingBall> list = new ArrayList<BouncingBall>();
-    private final int STARTINGBALLS =1000;
+    private ArrayList<BouncingBall> list = new ArrayList<>();
 
-    /**
-     * Display
-     * Constructor for the display
-     *
-     * @param nothing
-     * @return nothing
-     */
     Display() {
-        for (int i = 0; i < STARTINGBALLS; i++) {
+        for (int i = 0; i < STARTING_BALLS; i++) {
             list.add(new BouncingBall());
         }
         window = new JFrame("Ball Simulation");
@@ -75,7 +50,6 @@ public class Display {
      * DrawnPanel
      * Draws the lines and the balls
      *
-     * @param nothing
      * @return nothing
      */
     private class DrawnPanel extends JPanel {
@@ -95,30 +69,30 @@ public class Display {
             ArrayList<Node> quadList;
             ArrayList<Node> leafList;
             //Draws the ovals
-            for (int i = 0; i < list.size(); i++) {
+            for (BouncingBall bouncingBall : list) {
                 g.setColor(Color.BLACK);
-                g.fillOval(list.get(i).getXCoordinate(), list.get(i).getYCoordinate(), list.get(i).getRadius(), list.get(i).getRadius());
+                g.fillOval(bouncingBall.getXCoordinate(), bouncingBall.getYCoordinate(), bouncingBall.getRadius(), bouncingBall.getRadius());
 
-                list.get(i).move();
+                bouncingBall.move();
                 repaint();
             }
 
-         quadTree = new QuadTree<BouncingBall>(list);
-           quadList = drawLines(quadTree, g);
-           leafList = new ArrayList<Node>();
+            quadTree = new QuadTree<>(list);
+            quadList = drawLines(quadTree, g);
+            leafList = new ArrayList<>();
 
             //Copies the quadList to the leafList
-            for (int i = 0; i < quadList.size(); i++) {
-                if ((quadList.get(i).getLeftTop() == null) && (quadList.get(i).getLeftTop() == null) && (quadList.get(i).getRightBottom() == null) & (quadList.get(i).getRightTop() == null)) {
-                    leafList.add(quadList.get(i));
+            for (Node value : quadList) {
+                if ((value.getLeftTop() == null) && (value.getLeftTop() == null) && (value.getRightBottom() == null) & (value.getRightTop() == null)) {
+                    leafList.add(value);
                 }
             }
 
             //Calls the collide method
-            for (int i = 0; i < leafList.size(); i++) {
-                for (int j = 0; j < leafList.get(i).getItem().size(); j++) {
-                    for (int k = 1; k < leafList.get(i).getItem().size() - j; k++) {
-                        ((BouncingBall) (leafList.get(i).getItem().get(j))).collide(((BouncingBall) (leafList.get(i).getItem().get(j + k))));
+            for (Node node : leafList) {
+                for (int j = 0; j < node.getItem().size(); j++) {
+                    for (int k = 1; k < node.getItem().size() - j; k++) {
+                        ((BouncingBall) (node.getItem().get(j))).collide(((BouncingBall) (node.getItem().get(j + k))));
                     }
                 }
             }
@@ -133,17 +107,16 @@ public class Display {
          */
         public ArrayList<Node> drawLines(QuadTree<BouncingBall> quadTree, Graphics g) {
             //An arraylist with quadrants
-            ArrayList<Node> quadList = new ArrayList<Node>();
-            quadList.clear();
+            ArrayList<Node> quadList = new ArrayList<>();
             quadList.add(quadTree.getRootNode());
             quadTree.traverseNode(quadTree.getRootNode(), quadList);
 
             //Draws the box lines
-            for (int i = 0; i < quadList.size(); i++) {
+            for (Node node : quadList) {
                 g.setColor(Color.blue);
-                g.drawRect(quadList.get(i).getNorthWXCoordinate(), quadList.get(i).getNorthWYCoordinate(),
-                        quadList.get(i).getSouthEXCoordinate() - quadList.get(i).getNorthWXCoordinate(),
-                        quadList.get(i).getSouthEYCoordinate() - quadList.get(i).getNorthWYCoordinate());
+                g.drawRect(node.getNorthWXCoordinate(), node.getNorthWYCoordinate(),
+                        node.getSouthEXCoordinate() - node.getNorthWXCoordinate(),
+                        node.getSouthEYCoordinate() - node.getNorthWYCoordinate());
             }
             return quadList;
         }

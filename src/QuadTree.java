@@ -1,39 +1,28 @@
-/* QuadTree.java
- * The quadtree structure
- * October 30, 2018
- * Raymond Wang
- */
-
 import java.awt.*;
 import java.util.ArrayList;
 
 /**
  * QuadTree<E>
- * The quadtree data structure
- *
- * @param nothing
- * @return nothing
+ * A QuadTree DS that holds nodes
  */
 public class QuadTree<E> {
     public final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     public int screenWidth = (int) screenSize.getWidth();
     public int screenHeight = (int) screenSize.getHeight();
 
-    private Node<ArrayList> root = new Node<ArrayList>(null, 0, 0, screenWidth, screenHeight);
+    private Node<ArrayList> root = new Node<>(
+            null,
+            0,
+            0,
+            screenWidth,
+            screenHeight);
     public final int THRESHOLD = 5;
 
-    private ArrayList<BouncingBall> lTList = new ArrayList<BouncingBall>();
-    private ArrayList<BouncingBall> lBList = new ArrayList<BouncingBall>();
-    private ArrayList<BouncingBall> rBlist = new ArrayList<BouncingBall>();
-    private ArrayList<BouncingBall> rTlist = new ArrayList<BouncingBall>();
+    private ArrayList<BouncingBall> lTList = new ArrayList<>();
+    private ArrayList<BouncingBall> lBList = new ArrayList<>();
+    private ArrayList<BouncingBall> rBlist = new ArrayList<>();
+    private ArrayList<BouncingBall> rTlist = new ArrayList<>();
 
-    /**
-     * QuadTree
-     * The constructor for the quadtree
-     *
-     * @param list
-     * @return void
-     */
     public QuadTree(ArrayList<BouncingBall> list) {
         root.setItem(list);
         checkSplit(root, root.getItem());
@@ -69,35 +58,39 @@ public class QuadTree<E> {
 
             //Counts balls in child quadrants
             for (int i = 0; i < list.size(); i++) {
-                if (((list.get(i).getXCoordinate() + list.get(i).getRadius()) >= (node.getLeftTop().getNorthWXCoordinate())) && ((list.get(i).getXCoordinate() + list.get(i).getRadius()) <= (node.getLeftTop().getSouthEXCoordinate()))
-                        &&
-                        (((list.get(i).getYCoordinate()) + list.get(i).getRadius()) >= (node.getLeftTop().getNorthWYCoordinate())) && (list.get(i).getYCoordinate() + list.get(i).getRadius() <= (node.getLeftTop().getSouthEYCoordinate()))) {
+                if (((list.get(i).getXCoordinate() + list.get(i).getRadius()) >= (node.getLeftTop().getNorthWXCoordinate()))
+                        && ((list.get(i).getXCoordinate() + list.get(i).getRadius()) <= (node.getLeftTop().getSouthEXCoordinate()))
+                        && (((list.get(i).getYCoordinate()) + list.get(i).getRadius()) >= (node.getLeftTop().getNorthWYCoordinate()))
+                        && (list.get(i).getYCoordinate() + list.get(i).getRadius() <= (node.getLeftTop().getSouthEYCoordinate()))) {
                     lTList.add(list.get(i));
                 }
 
-                if (((list.get(i).getXCoordinate() + list.get(i).getRadius()) >= (node.getLeftBottom().getNorthWXCoordinate())) && ((list.get(i).getXCoordinate() + list.get(i).getRadius()) <= (node.getLeftBottom().getSouthEXCoordinate()))
-                        &&
-                        (((list.get(i).getYCoordinate()) + list.get(i).getRadius()) >= (node.getLeftBottom().getNorthWYCoordinate())) && (list.get(i).getYCoordinate() + list.get(i).getRadius() <= (node.getLeftBottom().getSouthEYCoordinate()))) {
+                if (((list.get(i).getXCoordinate() + list.get(i).getRadius()) >= (node.getLeftBottom().getNorthWXCoordinate()))
+                        && ((list.get(i).getXCoordinate() + list.get(i).getRadius()) <= (node.getLeftBottom().getSouthEXCoordinate()))
+                        && (((list.get(i).getYCoordinate()) + list.get(i).getRadius()) >= (node.getLeftBottom().getNorthWYCoordinate()))
+                        && (list.get(i).getYCoordinate() + list.get(i).getRadius() <= (node.getLeftBottom().getSouthEYCoordinate()))) {
                     lBList.add(list.get(i));
                 }
 
-                if (((list.get(i).getXCoordinate() + list.get(i).getRadius()) >= (node.getRightBottom().getNorthWXCoordinate())) && ((list.get(i).getXCoordinate() + list.get(i).getRadius()) <= (node.getRightBottom().getSouthEXCoordinate()))
-                        &&
-                        (((list.get(i).getYCoordinate()) + list.get(i).getRadius()) >= (node.getRightBottom().getNorthWYCoordinate())) && (list.get(i).getYCoordinate() + list.get(i).getRadius() <= (node.getRightBottom().getSouthEYCoordinate()))) {
+                if (((list.get(i).getXCoordinate() + list.get(i).getRadius()) >= (node.getRightBottom().getNorthWXCoordinate()))
+                        && ((list.get(i).getXCoordinate() + list.get(i).getRadius()) <= (node.getRightBottom().getSouthEXCoordinate()))
+                        && (((list.get(i).getYCoordinate()) + list.get(i).getRadius()) >= (node.getRightBottom().getNorthWYCoordinate()))
+                        && (list.get(i).getYCoordinate() + list.get(i).getRadius() <= (node.getRightBottom().getSouthEYCoordinate()))) {
                     rBlist.add(list.get(i));
                 }
 
-                if (((list.get(i).getXCoordinate() + list.get(i).getRadius()) >= (node.getRightTop().getNorthWXCoordinate())) && ((list.get(i).getXCoordinate() + list.get(i).getRadius()) <= (node.getRightTop().getSouthEXCoordinate()))
-                        &&
-                        (((list.get(i).getYCoordinate()) + list.get(i).getRadius()) >= (node.getRightTop().getNorthWYCoordinate())) && (list.get(i).getYCoordinate() + list.get(i).getRadius() <= (node.getRightTop().getSouthEYCoordinate()))) {
+                if (((list.get(i).getXCoordinate() + list.get(i).getRadius()) >= (node.getRightTop().getNorthWXCoordinate()))
+                        && ((list.get(i).getXCoordinate() + list.get(i).getRadius()) <= (node.getRightTop().getSouthEXCoordinate()))
+                        && (((list.get(i).getYCoordinate()) + list.get(i).getRadius()) >= (node.getRightTop().getNorthWYCoordinate()))
+                        && (list.get(i).getYCoordinate() + list.get(i).getRadius() <= (node.getRightTop().getSouthEYCoordinate()))) {
                     rTlist.add(list.get(i));
                 }
             }
 
-            lTList2 = new ArrayList<BouncingBall>();
-            lBList2 = new ArrayList<BouncingBall>();
-            rBList2 = new ArrayList<BouncingBall>();
-            rTList2 = new ArrayList<BouncingBall>();
+            lTList2 = new ArrayList<>();
+            lBList2 = new ArrayList<>();
+            rBList2 = new ArrayList<>();
+            rTList2 = new ArrayList<>();
 
             //Copies the lists
             for (int i = 0; i < lTList.size(); i++) {
@@ -135,7 +128,6 @@ public class QuadTree<E> {
             } catch (NullPointerException e) {
                 System.out.println("Node deleted");
             }
-
         } else if (list.size() < THRESHOLD) {
             node.collapseTree();
         }
@@ -162,13 +154,6 @@ public class QuadTree<E> {
         }
     }
 
-    /**
-     * getRootNode
-     * Gets the root node
-     *
-     * @param nothing
-     * @return root node
-     */
     public Node<ArrayList> getRootNode() {
         return this.root;
     }
